@@ -5,21 +5,21 @@ workflows:
       vars:
         JAVA_VERSION: 17
       android_signing:
-        - keystore_path: keystore.jks
-          keystore_password: $KEYSTORE_PASSWORD
-          key_alias: $KEY_ALIAS
-          key_password: $KEY_PASSWORD
-
+        - keystore:
+            path: ./app/my-release-key.jks
+            keystore_password: $KEYSTORE_PASSWORD
+            key_alias: $KEY_ALIAS
+            key_password: $KEY_PASSWORD
     scripts:
-      - name: Clean project
-        script: ./gradlew clean
-
+      - name: Install dependencies
+        script: |
+          ./gradlew clean
       - name: Build Release APK
-        script: ./gradlew assembleRelease
-
+        script: |
+          ./gradlew assembleRelease
     artifacts:
-      - app/build/outputs/**/*.apk
-
+      - app/build/outputs/apk/release/app-release.apk
+      
     publishing:
       email:
         recipients:
