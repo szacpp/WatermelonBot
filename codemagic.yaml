@@ -1,17 +1,14 @@
 workflows:
   android-release:
-    name: Android Release APK Build
-    max_build_duration: 60
-
+    name: Android Release
     environment:
-      groups:
-        - keystore_credentials
+      vars:
+        JAVA_VERSION: 17
       android_signing:
-        keystore: CM_KEYSTORE
-        keystore_password: CM_KEYSTORE_PASSWORD
-        key_alias: CM_KEY_ALIAS
-        key_password: CM_KEY_PASSWORD
-      JAVA_VERSION: "17"
+        - keystore_path: keystore.jks
+          keystore_password: $KEYSTORE_PASSWORD
+          key_alias: $KEY_ALIAS
+          key_password: $KEY_PASSWORD
 
     scripts:
       - name: Clean project
