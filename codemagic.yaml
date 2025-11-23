@@ -1,26 +1,29 @@
 workflows:
   android-release:
     name: Android Release
+    max_build_duration: 120
     environment:
-      vars:
-        JAVA_VERSION: 17
+      # Codemagic‑cheatsheet ke mutabiq android_signing mein keystore reference dalo  
       android_signing:
-        - keystore:
-            path: ./app/my-release-key.jks
-            keystore_password: $KEYSTORE_PASSWORD
-            key_alias: $KEY_ALIAS
-            key_password: $KEY_PASSWORD
+        - my_keystore_reference   # yahan apna keystore reference likho jo Codemagic console mein upload kiya hai 0  
+      vars:
+        # Agar koi public env var chaho define kar sakte ho  
+        PACKAGE_NAME: "com.yourcompany.yourapp"  
+        JAVA: 11                     # cheatsheet me software versions define kar sakte ho 1  
     scripts:
-      - name: Install dependencies
+      - name: Setup Android SDK
         script: |
-          ./gradlew clean
+          echo "sdk.dir=$ANDROID_SDK_ROOT" > "$CM_BUILD_DIR/local.properties"
       - name: Build Release APK
         script: |
+          ./gradlew clean
           ./gradlew assembleRelease
     artifacts:
-      - app/build/outputs/apk/release/app-release.apk
-      
+      - app/build/outputs/**/*.apk   # cheatsheet me artifact path ki example bhi aisi di hui hai 2  
     publishing:
       email:
         recipients:
-          - your-email@example.com
+          - aapka-email@example.com
+        notify:
+          success: true
+          failure: true
