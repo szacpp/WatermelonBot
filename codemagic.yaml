@@ -1,0 +1,29 @@
+workflows:
+  android-release:
+    name: Android Release APK Build
+    max_build_duration: 60
+
+    environment:
+      groups:
+        - keystore_credentials
+      android_signing:
+        keystore: CM_KEYSTORE
+        keystore_password: CM_KEYSTORE_PASSWORD
+        key_alias: CM_KEY_ALIAS
+        key_password: CM_KEY_PASSWORD
+      JAVA_VERSION: "17"
+
+    scripts:
+      - name: Clean project
+        script: ./gradlew clean
+
+      - name: Build Release APK
+        script: ./gradlew assembleRelease
+
+    artifacts:
+      - app/build/outputs/**/*.apk
+
+    publishing:
+      email:
+        recipients:
+          - your-email@example.com
